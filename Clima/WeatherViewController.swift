@@ -51,6 +51,11 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
             response in
             if response.result.isSuccess {
                print("success got the weather data")
+                
+                //Format and process data from the response
+                let weatherJSON : JSON = JSON(response.result.value!)
+                self.updateWeatherData(json: weatherJSON)
+                
             } else {
                 print("Error \(String(describing: response.result.error))")
                 self.cityLabel.text = "Connection Issues"
@@ -67,8 +72,10 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     /***************************************************************/
    
     
-    //Write the updateWeatherData method here:
-    
+    //Write the updateWeatherData method here using data from weather api http response:
+        func updateWeatherData(json: JSON) {
+            let tempResult = json["main"]["temp"]
+        }
 
     
     
@@ -93,6 +100,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         let location = locations[locations.count - 1]
         if location.horizontalAccuracy > 0 {
             locationManager.stopUpdatingLocation()
+            locationManager.delegate = nil
+            
             print("longitude = \(location.coordinate.longitude), latitude = \(location.coordinate.latitude)")
             
             let latitude = String(location.coordinate.latitude)
